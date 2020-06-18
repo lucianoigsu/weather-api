@@ -16,8 +16,8 @@ const IP_API_URL = "http://ip-api.com/json/"
 const UNIT_SYSTEM = "metric"
 const LANG = "es"
 
-const DEFAULT_LAT = "-58.38"
-const DEFAULT_LON = "-34.61"
+const DEFAULT_LAT = "-34.61"
+const DEFAULT_LON = "-58.38"
 
 var getCityLocation = function(city){
     var lat,lon;
@@ -32,7 +32,7 @@ var getCityLocation = function(city){
             break;
         case "paris":
             lat = "48.85";
-            lon = "2.35";
+            lon = "2.34";
             break;
         case "tokio":
             lat = "35.68";
@@ -53,6 +53,18 @@ var getCityLocation = function(city){
 
 // App
 const app = express();
+
+function setupCORS(req, res, next) {
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-type,Accept,X-Access-Token,X-Key');
+    res.header('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+    } else {
+      next();
+    }
+  }
+app.all('/*', setupCORS);
 
 app.get(BASE_ROUTE+'/location', async function(req, res) {
     try {
@@ -113,7 +125,7 @@ app.get(BASE_ROUTE+'/forecast/:city?', async function(req, res) {
     var lat
     var lon
     var path
-    var exclude = "minutely,hourly"
+    var exclude = "current,minutely,hourly"
 
     if(!req.params.city)
     {
